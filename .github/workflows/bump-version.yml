@@ -12,15 +12,10 @@ on:
           - minor
           - major
         default: 'patch'
-      prerelease:
-        description: 'Create as pre-release'
-        required: false
-        type: boolean
-        default: false
 
 jobs:
   bump-version:
-    name: Bump version and create release
+    name: Create version tag
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -88,51 +83,7 @@ jobs:
         git tag -a "v$NEW_VERSION" -m "Release version $NEW_VERSION"
         git push origin "v$NEW_VERSION"
 
-    - name: Regenerate assets with new version
-      run: |
-        python3 scripts/generate_assets.py
-        git add assets/
-        git diff --cached --quiet || git commit -m "chore: Update assets for v${{ steps.next_version.outputs.next }}"
-        git push origin main
-
-    - name: Generate changelog
-      id: changelog
-      run: |
-        # Get commits since last tag
-        LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
-
-        if [ -z "$LAST_TAG" ]; then
-          CHANGELOG=$(git log --pretty=format:"- %s (%h)" --reverse)
-        else
-          CHANGELOG=$(git log ${LAST_TAG}..HEAD --pretty=format:"- %s (%h)" --reverse)
-        fi
-
-        # Save to file for multiline support
-        echo "$CHANGELOG" > changelog.txt
-
-        # Also set as output (escaped)
-        echo "changelog<<EOF" >> $GITHUB_OUTPUT
-        echo "$CHANGELOG" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
-
-    - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ steps.next_version.outputs.next }}
-        release_name: Release v${{ steps.next_version.outputs.next }}
-        body: |
-          ## What's Changed
-
-          ${{ steps.changelog.outputs.changelog }}
-
-          ## Installation
-
-          ```bash
-          pip install --upgrade ytdl-interactive
-          ```
-
-          **Full Changelog**: https://github.com/${{ github.repository }}/compare/v${{ steps.current_version.outputs.current }}...v${{ steps.next_version.outputs.next }}
-        draft: false
-        prerelease: ${{ github.event.inputs.prerelease }}
+        echo "✅ Created and pushed tag v$NEW_VERSION"
+        echo "🚀 The publish workflow will now automatically:"
+        echo "   1. Build and publish to PyPI"
+        echo "   2. Create GitHub release"
