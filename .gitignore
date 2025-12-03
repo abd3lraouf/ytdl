@@ -110,6 +110,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.pypirc
 
 # Spyder project settings
 .spyderproject
@@ -154,6 +155,7 @@ downloads/
 *.part
 *.ytdl
 *.temp
+ytdl_version.py
 
 # Test files
 test_*.py

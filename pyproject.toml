@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=64.0", "setuptools_scm>=8.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "ytdl-interactive"
-version = "1.0.0"
+dynamic = ["version"]
 description = "Interactive YouTube Downloader CLI powered by yt-dlp"
 readme = "README.md"
 license = {text = "MIT"}
@@ -49,3 +49,9 @@ dev = [
 
 [tool.setuptools]
 py-modules = ["ytdl"]
+
+[tool.setuptools_scm]
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
+write_to = "ytdl_version.py"
+write_to_template = "__version__ = '{version}'"

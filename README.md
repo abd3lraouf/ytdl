@@ -1,10 +1,22 @@
+<div align="center">
+
 # ytdl - Interactive YouTube Downloader
 
 [![Python Version](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![PyPI version](https://img.shields.io/pypi/v/ytdl-interactive.svg)](https://pypi.org/project/ytdl-interactive/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Downloads](https://img.shields.io/pypi/dm/ytdl-interactive.svg)](https://pypi.org/project/ytdl-interactive/)
+[![GitHub stars](https://img.shields.io/github/stars/abd3lraouf/ytdl.svg)](https://github.com/abd3lraouf/ytdl/stargazers)
+[![CI](https://img.shields.io/github/actions/workflow/status/abd3lraouf/ytdl/ci.yml?branch=main&label=CI)](https://github.com/abd3lraouf/ytdl/actions)
 [![yt-dlp](https://img.shields.io/badge/powered%20by-yt--dlp-red.svg)](https://github.com/yt-dlp/yt-dlp)
 
-A feature-rich, interactive command-line interface for downloading YouTube videos and playlists. Built on top of [yt-dlp](https://github.com/yt-dlp/yt-dlp) with an intuitive menu system powered by [questionary](https://github.com/tmbo/questionary).
+**A feature-rich, interactive command-line interface for downloading YouTube videos and playlists.**
+
+Built on top of [yt-dlp](https://github.com/yt-dlp/yt-dlp) with an intuitive menu system powered by [questionary](https://github.com/tmbo/questionary).
+
+[Features](#-features) • [Installation](#-installation) • [Quick Start](#-quick-start) • [Documentation](#-usage-guide) • [Contributing](CONTRIBUTING.md)
+
+</div>
 
 ## ✨ Features
 
@@ -224,6 +236,27 @@ ytdl/
 ├── LICENSE              # MIT License
 └── .gitignore          # Git ignore rules
 ```
+
+## 🤖 Automated Releases
+
+This project uses automated versioning and CI/CD:
+
+- **Automatic versioning** via `setuptools_scm` (based on git tags)
+- **Automated PyPI publishing** on new releases
+- **CI testing** on all PRs and pushes
+- **Release drafts** auto-generated from commits
+
+### Creating a New Release
+
+1. Go to **Actions** → **Bump Version** → **Run workflow**
+2. Select version type (patch/minor/major)
+3. Workflow automatically:
+   - Creates git tag
+   - Generates changelog
+   - Creates GitHub release
+   - Publishes to PyPI
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed release process.
 
 ## 🛠️ Development
 
