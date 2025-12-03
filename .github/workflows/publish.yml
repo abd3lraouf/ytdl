@@ -16,7 +16,7 @@ jobs:
     name: Build and publish Python distribution to PyPI
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write  # Required for creating releases
       id-token: write  # Required for trusted publishing
 
     steps:
