@@ -10,7 +10,7 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/abd3lraouf/ytdl/ci.yml?branch=main&label=CI)](https://github.com/abd3lraouf/ytdl/actions)
 [![yt-dlp](https://img.shields.io/badge/powered%20by-yt--dlp-red.svg)](https://github.com/yt-dlp/yt-dlp)
 
-**A feature-rich, interactive command-line interface for downloading YouTube videos and playlists.**
+**A feature-rich, interactive CLI for downloading YouTube videos and playlists with ease.**
 
 Built on top of [yt-dlp](https://github.com/yt-dlp/yt-dlp) with an intuitive menu system powered by [questionary](https://github.com/tmbo/questionary).
 
