@@ -5,7 +5,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![PyPI version](https://img.shields.io/pypi/v/ytdl-interactive.svg)](https://pypi.org/project/ytdl-interactive/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Downloads](https://img.shields.io/pypi/dm/ytdl-interactive.svg)](https://pypi.org/project/ytdl-interactive/)
+[![PyPI - Status](https://img.shields.io/pypi/status/ytdl-interactive.svg)](https://pypi.org/project/ytdl-interactive/)
 [![GitHub stars](https://img.shields.io/github/stars/abd3lraouf/ytdl.svg)](https://github.com/abd3lraouf/ytdl/stargazers)
 [![CI](https://img.shields.io/github/actions/workflow/status/abd3lraouf/ytdl/ci.yml?branch=main&label=CI)](https://github.com/abd3lraouf/ytdl/actions)
 [![yt-dlp](https://img.shields.io/badge/powered%20by-yt--dlp-red.svg)](https://github.com/yt-dlp/yt-dlp)
