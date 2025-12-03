@@ -7,7 +7,7 @@ name = "ytdl-interactive"
 dynamic = ["version"]
 description = "Interactive YouTube Downloader CLI powered by yt-dlp"
 readme = "README.md"
-license = {text = "MIT"}
+license = "MIT"
 authors = [
     {name = "ytdl Contributors", email = "ytdl@example.com"}
 ]
@@ -17,7 +17,6 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
