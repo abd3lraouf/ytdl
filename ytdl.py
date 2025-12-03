@@ -23,16 +23,18 @@ import yt_dlp
 
 
 # Custom styling for questionary prompts
-CUSTOM_STYLE = Style([
-    ('qmark', 'fg:cyan bold'),
-    ('question', 'fg:white bold'),
-    ('answer', 'fg:green bold'),
-    ('pointer', 'fg:cyan bold'),
-    ('highlighted', 'fg:cyan bold'),
-    ('selected', 'fg:green'),
-    ('separator', 'fg:gray'),
-    ('instruction', 'fg:gray'),
-])
+CUSTOM_STYLE = Style(
+    [
+        ("qmark", "fg:cyan bold"),
+        ("question", "fg:white bold"),
+        ("answer", "fg:green bold"),
+        ("pointer", "fg:cyan bold"),
+        ("highlighted", "fg:cyan bold"),
+        ("selected", "fg:green"),
+        ("separator", "fg:gray"),
+        ("instruction", "fg:gray"),
+    ]
+)
 
 # Default configuration constants
 DEFAULT_OUTPUT_DIR = "./downloads"
@@ -45,18 +47,18 @@ NAMING_TEMPLATES = {
     "default": {
         "single": DEFAULT_SINGLE_TEMPLATE,
         "playlist": DEFAULT_PLAYLIST_TEMPLATE,
-        "description": "Default (Title-based)"
+        "description": "Default (Title-based)",
     },
     "rich_metadata": {
         "single": "%(upload_date)s - %(channel)s - %(title)s.%(ext)s",
         "playlist": "%(playlist)s/%(playlist_index)03d - %(upload_date)s - %(channel)s - %(title)s.%(ext)s",
-        "description": "Rich Metadata (Date - Channel - Title)"
+        "description": "Rich Metadata (Date - Channel - Title)",
     },
     "minimalist": {
         "single": "%(id)s.%(ext)s",
         "playlist": "%(playlist)s/%(playlist_index)03d - %(id)s.%(ext)s",
-        "description": "Minimalist (Video ID only)"
-    }
+        "description": "Minimalist (Video ID only)",
+    },
 }
 
 
@@ -84,91 +86,103 @@ class DownloadConfig:
     def to_yt_dlp_opts(self) -> dict[str, Any]:
         """Convert config to yt-dlp options dictionary."""
         opts = {
-            'format': self.format,
-            'outtmpl': self.get_output_template(),
-            'progress_hooks': [progress_hook],
-            'postprocessor_hooks': [postprocessor_hook],
-            'ignoreerrors': True,
-            'no_warnings': False,
-            'quiet': False,
+            "format": self.format,
+            "outtmpl": self.get_output_template(),
+            "progress_hooks": [progress_hook],
+            "postprocessor_hooks": [postprocessor_hook],
+            "ignoreerrors": True,
+            "no_warnings": False,
+            "quiet": False,
         }
 
         postprocessors = []
 
         if self.audio_only:
-            opts['format'] = 'bestaudio/best'
-            postprocessors.append({
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '192',
-            })
+            opts["format"] = "bestaudio/best"
+            postprocessors.append(
+                {
+                    "key": "FFmpegExtractAudio",
+                    "preferredcodec": "mp3",
+                    "preferredquality": "192",
+                }
+            )
 
         if self.embed_thumbnail:
-            opts['writethumbnail'] = True
-            postprocessors.append({'key': 'EmbedThumbnail'})
+            opts["writethumbnail"] = True
+            postprocessors.append({"key": "EmbedThumbnail"})
 
         if self.embed_subs:
-            opts['writesubtitles'] = True
-            opts['subtitleslangs'] = ['en', 'ar']
-            opts['embedsubtitles'] = True
-            postprocessors.append({
-                'key': 'FFmpegSubtitlesConvertor',
-                'format': 'srt',
-            })
-            postprocessors.append({'key': 'FFmpegEmbedSubtitle'})
+            opts["writesubtitles"] = True
+            opts["subtitleslangs"] = ["en", "ar"]
+            opts["embedsubtitles"] = True
+            postprocessors.append(
+                {
+                    "key": "FFmpegSubtitlesConvertor",
+                    "format": "srt",
+                }
+            )
+            postprocessors.append({"key": "FFmpegEmbedSubtitle"})
 
         if self.add_metadata:
-            postprocessors.append({'key': 'FFmpegMetadata'})
+            postprocessors.append({"key": "FFmpegMetadata"})
 
         if self.sponsorblock:
-            opts['sponsorblock_remove'] = ['all']
-            postprocessors.append({
-                'key': 'SponsorBlock',
-                'categories': ['all'],
-            })
-            postprocessors.append({
-                'key': 'ModifyChapters',
-                'remove_sponsor_segments': ['all'],
-            })
+            opts["sponsorblock_remove"] = ["all"]
+            postprocessors.append(
+                {
+                    "key": "SponsorBlock",
+                    "categories": ["all"],  # type: ignore[dict-item]
+                }
+            )
+            postprocessors.append(
+                {
+                    "key": "ModifyChapters",
+                    "remove_sponsor_segments": ["all"],  # type: ignore[dict-item]
+                }
+            )
 
         if self.proxy:
-            opts['proxy'] = self.proxy
+            opts["proxy"] = self.proxy
 
         if self.geo_bypass:
-            opts['geo_bypass'] = True
+            opts["geo_bypass"] = True
 
         if postprocessors:
-            opts['postprocessors'] = postprocessors
+            opts["postprocessors"] = postprocessors
 
         return opts
 
 
 def progress_hook(d: dict[str, Any]) -> None:
     """Progress hook for yt-dlp to display download status."""
-    if d['status'] == 'downloading':
-        percent = d.get('_percent_str', 'N/A')
-        speed = d.get('_speed_str', 'N/A')
-        eta = d.get('_eta_str', 'N/A')
-        filename = d.get('filename', 'Unknown')
+    if d["status"] == "downloading":
+        percent = d.get("_percent_str", "N/A")
+        speed = d.get("_speed_str", "N/A")
+        eta = d.get("_eta_str", "N/A")
+        filename = d.get("filename", "Unknown")
         # Truncate filename for display
         display_name = Path(filename).name
         if len(display_name) > 50:
             display_name = display_name[:47] + "..."
-        print(f"\r  Downloading: {percent} | Speed: {speed} | ETA: {eta} | {display_name}", end='', flush=True)
+        print(
+            f"\r  Downloading: {percent} | Speed: {speed} | ETA: {eta} | {display_name}",
+            end="",
+            flush=True,
+        )
 
-    elif d['status'] == 'finished':
+    elif d["status"] == "finished":
         print(f"\n  Download complete: {Path(d.get('filename', 'Unknown')).name}")
 
-    elif d['status'] == 'error':
+    elif d["status"] == "error":
         print(f"\n  Error occurred during download")
 
 
 def postprocessor_hook(d: dict[str, Any]) -> None:
     """Post-processor hook for yt-dlp to display post-processing status."""
-    if d['status'] == 'started':
-        pp_name = d.get('postprocessor', 'Unknown')
+    if d["status"] == "started":
+        pp_name = d.get("postprocessor", "Unknown")
         print(f"  Post-processing: {pp_name}...")
-    elif d['status'] == 'finished':
+    elif d["status"] == "finished":
         print(f"  Post-processing complete")
 
 
@@ -183,14 +197,14 @@ def validate_youtube_url(url: str) -> bool:
         True if URL appears to be a valid YouTube URL, False otherwise
     """
     youtube_patterns = [
-        r'^https?://(www\.)?youtube\.com/watch\?v=[\w-]+',
-        r'^https?://(www\.)?youtube\.com/playlist\?list=[\w-]+',
-        r'^https?://(www\.)?youtube\.com/shorts/[\w-]+',
-        r'^https?://(www\.)?youtube\.com/@[\w-]+',
-        r'^https?://(www\.)?youtube\.com/channel/[\w-]+',
-        r'^https?://(www\.)?youtube\.com/c/[\w-]+',
-        r'^https?://youtu\.be/[\w-]+',
-        r'^https?://music\.youtube\.com/',
+        r"^https?://(www\.)?youtube\.com/watch\?v=[\w-]+",
+        r"^https?://(www\.)?youtube\.com/playlist\?list=[\w-]+",
+        r"^https?://(www\.)?youtube\.com/shorts/[\w-]+",
+        r"^https?://(www\.)?youtube\.com/@[\w-]+",
+        r"^https?://(www\.)?youtube\.com/channel/[\w-]+",
+        r"^https?://(www\.)?youtube\.com/c/[\w-]+",
+        r"^https?://youtu\.be/[\w-]+",
+        r"^https?://music\.youtube\.com/",
     ]
 
     for pattern in youtube_patterns:
@@ -212,10 +226,10 @@ def detect_playlist(url: str) -> tuple[bool, Optional[dict]]:
     print("\n  Analyzing URL...")
 
     ydl_opts = {
-        'quiet': True,
-        'no_warnings': True,
-        'extract_flat': True,
-        'skip_download': True,
+        "quiet": True,
+        "no_warnings": True,
+        "extract_flat": True,
+        "skip_download": True,
     }
 
     try:
@@ -225,14 +239,16 @@ def detect_playlist(url: str) -> tuple[bool, Optional[dict]]:
             if info is None:
                 return False, None
 
-            is_playlist = info.get('_type') == 'playlist' or 'entries' in info
+            is_playlist = info.get("_type") == "playlist" or "entries" in info
 
             if is_playlist:
-                entry_count = len(info.get('entries', []))
-                playlist_title = info.get('title', 'Unknown Playlist')
-                print(f"  Detected: Playlist - '{playlist_title}' ({entry_count} videos)")
+                entry_count = len(info.get("entries", []))
+                playlist_title = info.get("title", "Unknown Playlist")
+                print(
+                    f"  Detected: Playlist - '{playlist_title}' ({entry_count} videos)"
+                )
             else:
-                video_title = info.get('title', 'Unknown Video')
+                video_title = info.get("title", "Unknown Video")
                 print(f"  Detected: Single Video - '{video_title}'")
 
             return is_playlist, info
@@ -252,8 +268,8 @@ def list_formats(url: str) -> None:
     print("\n  Fetching available formats...\n")
 
     ydl_opts = {
-        'listformats': True,
-        'quiet': False,
+        "listformats": True,
+        "quiet": False,
     }
 
     try:
@@ -346,9 +362,9 @@ def show_advanced_menu(config: DownloadConfig) -> Optional[DownloadConfig]:
                 "3. Post-Processing Options",
                 "4. Networking/Bypass Options",
                 "5. Start Download",
-                "← Back to Main Menu"
+                "← Back to Main Menu",
             ],
-            style=CUSTOM_STYLE
+            style=CUSTOM_STYLE,
         ).ask()
 
         if choice is None or choice == "← Back to Main Menu":
@@ -378,9 +394,9 @@ def format_selection_menu(config: DownloadConfig) -> DownloadConfig:
             "Video (Default - best quality)",
             "Audio Only (MP3)",
             "List Available Formats",
-            "← Back"
+            "← Back",
         ],
-        style=CUSTOM_STYLE
+        style=CUSTOM_STYLE,
     ).ask()
 
     if choice is None or "Back" in choice:
@@ -401,13 +417,12 @@ def format_selection_menu(config: DownloadConfig) -> DownloadConfig:
         custom = questionary.confirm(
             "Would you like to specify a custom format code?",
             default=False,
-            style=CUSTOM_STYLE
+            style=CUSTOM_STYLE,
         ).ask()
 
         if custom:
             format_code = questionary.text(
-                "Enter format code (e.g., '137+140' or 'best'):",
-                style=CUSTOM_STYLE
+                "Enter format code (e.g., '137+140' or 'best'):", style=CUSTOM_STYLE
             ).ask()
             if format_code:
                 config.format = format_code
@@ -421,9 +436,7 @@ def output_path_menu(config: DownloadConfig) -> DownloadConfig:
     """Output path and naming template submenu."""
     # Output directory
     new_dir = questionary.text(
-        "Enter output directory:",
-        default=config.output_dir,
-        style=CUSTOM_STYLE
+        "Enter output directory:", default=config.output_dir, style=CUSTOM_STYLE
     ).ask()
 
     if new_dir:
@@ -435,13 +448,11 @@ def output_path_menu(config: DownloadConfig) -> DownloadConfig:
         f"B. {NAMING_TEMPLATES['rich_metadata']['description']}",
         f"C. {NAMING_TEMPLATES['minimalist']['description']}",
         "D. Custom Template",
-        "← Back"
+        "← Back",
     ]
 
     choice = questionary.select(
-        "Select Naming Template:",
-        choices=template_choices,
-        style=CUSTOM_STYLE
+        "Select Naming Template:", choices=template_choices, style=CUSTOM_STYLE
     ).ask()
 
     if choice is None or "Back" in choice:
@@ -457,7 +468,7 @@ def output_path_menu(config: DownloadConfig) -> DownloadConfig:
         custom_template = questionary.text(
             "Enter custom template (use yt-dlp template syntax):",
             default="%(title)s.%(ext)s",
-            style=CUSTOM_STYLE
+            style=CUSTOM_STYLE,
         ).ask()
 
         if custom_template:
@@ -474,9 +485,9 @@ def output_path_menu(config: DownloadConfig) -> DownloadConfig:
 
     # Set the template based on playlist detection
     if config.is_playlist:
-        config.naming_template = NAMING_TEMPLATES[template_key]['playlist']
+        config.naming_template = NAMING_TEMPLATES[template_key]["playlist"]
     else:
-        config.naming_template = NAMING_TEMPLATES[template_key]['single']
+        config.naming_template = NAMING_TEMPLATES[template_key]["single"]
 
     print(f"  Template set: {config.naming_template}")
     return config
@@ -490,9 +501,11 @@ def post_processing_menu(config: DownloadConfig) -> DownloadConfig:
             questionary.Choice("Embed Thumbnail", checked=config.embed_thumbnail),
             questionary.Choice("Embed Subtitles", checked=config.embed_subs),
             questionary.Choice("Add Metadata", checked=config.add_metadata),
-            questionary.Choice("SponsorBlock (Remove Sponsors/Ads)", checked=config.sponsorblock),
+            questionary.Choice(
+                "SponsorBlock (Remove Sponsors/Ads)", checked=config.sponsorblock
+            ),
         ],
-        style=CUSTOM_STYLE
+        style=CUSTOM_STYLE,
     ).ask()
 
     if selected is not None:
@@ -513,16 +526,14 @@ def networking_menu(config: DownloadConfig) -> DownloadConfig:
     proxy_input = questionary.text(
         "Enter proxy URL (leave empty for none):",
         default=config.proxy or "",
-        style=CUSTOM_STYLE
+        style=CUSTOM_STYLE,
     ).ask()
 
     config.proxy = proxy_input if proxy_input else None
 
     # Geo-bypass toggle
     config.geo_bypass = questionary.confirm(
-        "Enable Geo-Bypass?",
-        default=config.geo_bypass,
-        style=CUSTOM_STYLE
+        "Enable Geo-Bypass?", default=config.geo_bypass, style=CUSTOM_STYLE
     ).ask()
 
     settings = []
@@ -555,9 +566,9 @@ def show_main_menu(config: DownloadConfig) -> Optional[str]:
         choices=[
             "1. Quick Default Download (Recommended)",
             "2. Advanced Download Settings",
-            "3. Exit"
+            "3. Exit",
         ],
-        style=CUSTOM_STYLE
+        style=CUSTOM_STYLE,
     ).ask()
 
 
@@ -572,33 +583,24 @@ Examples:
   ytdl https://www.youtube.com/watch?v=dQw4w9WgXcQ
   ytdl "https://www.youtube.com/playlist?list=PLxxxxxx"
   python ytdl.py https://youtu.be/dQw4w9WgXcQ
-        """
+        """,
     )
-    parser.add_argument(
-        "url",
-        help="YouTube video or playlist URL to download"
-    )
-    parser.add_argument(
-        "-v", "--version",
-        action="version",
-        version="ytdl 1.0.0"
-    )
+    parser.add_argument("url", help="YouTube video or playlist URL to download")
+    parser.add_argument("-v", "--version", action="version", version="ytdl 1.0.0")
 
     args = parser.parse_args()
 
     # Display banner
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("  ytdl - Interactive YouTube Downloader")
     print("  Powered by yt-dlp")
-    print("="*60)
+    print("=" * 60)
 
     # Validate URL
     if not validate_youtube_url(args.url):
         print(f"\n  Warning: URL may not be a valid YouTube URL: {args.url}")
         proceed = questionary.confirm(
-            "Do you want to proceed anyway?",
-            default=False,
-            style=CUSTOM_STYLE
+            "Do you want to proceed anyway?", default=False, style=CUSTOM_STYLE
         ).ask()
         if not proceed:
             print("  Exiting.")
@@ -632,9 +634,7 @@ Examples:
 
             # Ask if user wants to download another
             again = questionary.confirm(
-                "Download another video?",
-                default=False,
-                style=CUSTOM_STYLE
+                "Download another video?", default=False, style=CUSTOM_STYLE
             ).ask()
 
             if not again:
@@ -642,8 +642,7 @@ Examples:
                 sys.exit(0)
             else:
                 new_url = questionary.text(
-                    "Enter new YouTube URL:",
-                    style=CUSTOM_STYLE
+                    "Enter new YouTube URL:", style=CUSTOM_STYLE
                 ).ask()
 
                 if new_url and validate_youtube_url(new_url):
@@ -667,9 +666,7 @@ Examples:
 
                 # Ask if user wants to download another
                 again = questionary.confirm(
-                    "Download another video?",
-                    default=False,
-                    style=CUSTOM_STYLE
+                    "Download another video?", default=False, style=CUSTOM_STYLE
                 ).ask()
 
                 if not again:
@@ -677,8 +674,7 @@ Examples:
                     sys.exit(0)
                 else:
                     new_url = questionary.text(
-                        "Enter new YouTube URL:",
-                        style=CUSTOM_STYLE
+                        "Enter new YouTube URL:", style=CUSTOM_STYLE
                     ).ask()
 
                     if new_url:
