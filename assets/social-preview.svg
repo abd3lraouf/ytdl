@@ -32,6 +32,6 @@
 
   <!-- Version badge -->
   <text x="640" y="580" font-size="16" text-anchor="middle" fill="#555" font-family="system-ui, sans-serif">
-    v1.0.0
+    v1.0.2
   </text>
 </svg>
